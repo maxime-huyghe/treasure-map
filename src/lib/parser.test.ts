@@ -74,15 +74,15 @@ test("parses a map with some adventurers", () => {
     adventurers: [
       {
         name: "Alpha",
-        xPos: 0,
-        yPos: 0,
+        x: 0,
+        y: 0,
         orientation: "S",
         nextMoves: ["A", "D", "A", "D", "A", "D", "A", "D", "A", "D"],
       },
       {
         name: "Bravo",
-        xPos: 1,
-        yPos: 1,
+        x: 1,
+        y: 1,
         orientation: "N",
         nextMoves: ["G", "A", "G", "A", "G", "A", "G", "A", "G", "A"],
       },
@@ -235,15 +235,15 @@ test("parses a complex map with every element type", () => {
     adventurers: [
       {
         name: "Alpha",
-        xPos: 0,
-        yPos: 0,
+        x: 0,
+        y: 0,
         orientation: "S",
         nextMoves: ["A", "D", "A", "D", "A", "D", "A", "D", "A", "D"],
       },
       {
         name: "Bravo",
-        xPos: 1,
-        yPos: 1,
+        x: 1,
+        y: 1,
         orientation: "N",
         nextMoves: ["G", "A", "G", "A", "G", "A", "G", "A", "G", "A"],
       },
@@ -251,8 +251,8 @@ test("parses a complex map with every element type", () => {
         name: "Charlie",
         nextMoves: ["A", "A", "A", "A", "A", "A", "A", "A"],
         orientation: "E",
-        xPos: 2,
-        yPos: 4,
+        x: 2,
+        y: 4,
       },
     ],
   });
