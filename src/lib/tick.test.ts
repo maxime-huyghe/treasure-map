@@ -27,7 +27,7 @@ test("advance one non-blocked adventurer one turn", () => {
 
 const COME_BACK_HOME = `
 C - 2 - 2
-A - Venus - 0 - 0 - S - AGAGAGAG
+A - Venus - 0 - 0 - S - AGAGAGA
 `;
 
 test("advance one adventurer until their movements are exhausted", () => {
@@ -104,7 +104,7 @@ test("advance two adventurers who don't cross paths", () => {
 const CONFLICT = `
 C - 2 - 1
 A - ABC - 0 - 0 - E - A
-A - CBA - 1 - 0 - W - A
+A - CBA - 1 - 0 - O - A
 `;
 
 test("advance two adventurers who cross paths", () => {
@@ -117,14 +117,44 @@ test("advance two adventurers who cross paths", () => {
         name: "ABC",
         x: 0,
         y: 0,
-        orientation: "O",
+        orientation: "E",
         nextMoves: [],
       },
       {
         name: "CBA",
         x: 1,
         y: 0,
+        orientation: "O",
+        nextMoves: [],
+      },
+    ],
+  });
+});
+
+const CONFLICT_TWO = `
+C - 3 - 1
+A - ABC - 0 - 0 - E - A
+A - CBA - 2 - 0 - O - A
+`;
+
+test("advance two adventurers who cross paths but one can move", () => {
+  const map = parseMap(CONFLICT_TWO);
+  const newMap = finishSimulation(map);
+  expect(newMap).toEqual<TreasureMap>({
+    ...map,
+    adventurers: [
+      {
+        name: "ABC",
+        x: 1,
+        y: 0,
         orientation: "E",
+        nextMoves: [],
+      },
+      {
+        name: "CBA",
+        x: 2,
+        y: 0,
+        orientation: "O",
         nextMoves: [],
       },
     ],
