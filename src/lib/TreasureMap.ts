@@ -1,28 +1,29 @@
-export type TreasureMap = {
+export type TreasureMap = Readonly<{
   width: number;
   height: number;
-  squares: Square[][];
-  adventurers: Adventurer[];
-};
+  squares: ReadonlyArray<ReadonlyArray<Square>>;
+  adventurers: ReadonlyArray<Adventurer>;
+}>;
 
-export type Square =
+export type Square = Readonly<
   | { empty: true }
   | {
       mountain: true;
     }
   | {
       treasure: number;
-    };
+    }
+>;
 
-export type Adventurer = {
+export type Adventurer = Readonly<{
   name: string;
   x: number;
   y: number;
   orientation: Orientation;
-  nextMoves: Move[];
-};
+  nextMoves: ReadonlyArray<Move>;
+}>;
 
-type Orientation = "N" | "E" | "S" | "O";
+export type Orientation = "N" | "E" | "S" | "O";
 
 type Move = "A" | "G" | "D";
 
