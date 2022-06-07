@@ -24,12 +24,19 @@ export function tickSimulation(map: TreasureMap): TreasureMap {
       }
       // Find an adventurer in the same position as the treasure.
       for (const adv in newAdventurers) {
+        if (!newAdventurers[adv].justMoved) {
+          // Adventurers need to move to dig up a treasure.
+          continue;
+        }
         if (newAdventurers[adv].x === x && newAdventurers[adv].y === y) {
           newAdventurers[adv] = {
             ...newAdventurers[adv],
             treasures: newAdventurers[adv].treasures + 1,
           };
           // We can return directly because no two adventurers can be on the same square.
+          if (square.amount === 1) {
+            return { type: "empty" };
+          }
           return { ...square, amount: square.amount - 1 };
         }
       }
@@ -61,6 +68,7 @@ function tickIndividualAdventurer(map: TreasureMap, adventurer: Adventurer): Adv
         name: adventurer.name,
         x: newX,
         y: newY,
+        justMoved: adventurer.x !== newX || adventurer.y !== newY,
         orientation: adventurer.orientation,
         nextMoves: restOfNextMoves,
         treasures: adventurer.treasures,
@@ -70,6 +78,7 @@ function tickIndividualAdventurer(map: TreasureMap, adventurer: Adventurer): Adv
         name: adventurer.name,
         x: adventurer.x,
         y: adventurer.y,
+        justMoved: false,
         orientation: rotateAdventurerCounterClockwise(adventurer.orientation),
         nextMoves: restOfNextMoves,
         treasures: adventurer.treasures,
@@ -79,6 +88,7 @@ function tickIndividualAdventurer(map: TreasureMap, adventurer: Adventurer): Adv
         name: adventurer.name,
         x: adventurer.x,
         y: adventurer.y,
+        justMoved: false,
         orientation: rotateAdventurerClockwise(adventurer.orientation),
         nextMoves: restOfNextMoves,
         treasures: adventurer.treasures,
@@ -86,6 +96,9 @@ function tickIndividualAdventurer(map: TreasureMap, adventurer: Adventurer): Adv
   }
 }
 
+/**
+ * Moves the adventurer forward one square, unless there is an obstacle.
+ */
 function moveAdventurerForward(
   map: TreasureMap,
   orientation: Orientation,

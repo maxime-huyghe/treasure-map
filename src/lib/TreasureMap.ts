@@ -20,6 +20,7 @@ export type Adventurer = Readonly<{
   name: string;
   x: number;
   y: number;
+  justMoved: boolean;
   orientation: Orientation;
   nextMoves: ReadonlyArray<Move>;
   treasures: number;
@@ -93,6 +94,7 @@ export function parseMap(input: string): TreasureMap {
         name,
         x: parseInt(x, 10),
         y: parseInt(y, 10),
+        justMoved: false,
         orientation: orientation as Orientation,
         nextMoves: moves.split("").map((move) => move as Move),
         treasures: 0,

@@ -18,6 +18,7 @@ test("advance a non-blocked adventurer one turn", () => {
         name: "Mercury",
         x: 0,
         y: 1,
+        justMoved: true,
         orientation: "S",
         nextMoves: ["A"],
         treasures: 0,
@@ -41,6 +42,7 @@ test("advance an adventurer until their movements are exhausted", () => {
         name: "Venus",
         x: 0,
         y: 0,
+        justMoved: true,
         orientation: "O",
         nextMoves: [],
         treasures: 0,
@@ -65,6 +67,7 @@ test("advance an adventurer who gets blocked by a mountain", () => {
         name: "Earth",
         x: 1,
         y: 1,
+        justMoved: true,
         orientation: "E",
         nextMoves: [],
         treasures: 0,
@@ -76,8 +79,8 @@ test("advance an adventurer who gets blocked by a mountain", () => {
 const DUO = `
 C - 2 - 3
 M - 0 - 0
-A - Phobos - 0 - 0 - S - AAA
-A - Deimos - 1 - 2 - N - AAA
+A - Phobos - 0 - 0 - S - AA
+A - Deimos - 1 - 2 - N - AA
 `;
 
 test("advance two adventurers who don't cross paths", () => {
@@ -90,6 +93,7 @@ test("advance two adventurers who don't cross paths", () => {
         name: "Phobos",
         x: 0,
         y: 2,
+        justMoved: true,
         orientation: "S",
         nextMoves: [],
         treasures: 0,
@@ -98,6 +102,7 @@ test("advance two adventurers who don't cross paths", () => {
         name: "Deimos",
         x: 1,
         y: 0,
+        justMoved: true,
         orientation: "N",
         nextMoves: [],
         treasures: 0,
@@ -122,6 +127,7 @@ test("advance two adventurers who cross paths", () => {
         name: "ABC",
         x: 0,
         y: 0,
+        justMoved: false,
         orientation: "E",
         nextMoves: [],
         treasures: 0,
@@ -130,6 +136,7 @@ test("advance two adventurers who cross paths", () => {
         name: "CBA",
         x: 1,
         y: 0,
+        justMoved: false,
         orientation: "O",
         nextMoves: [],
         treasures: 0,
@@ -154,6 +161,7 @@ test("advance two adventurers who cross paths but one can move", () => {
         name: "ABC",
         x: 1,
         y: 0,
+        justMoved: true,
         orientation: "E",
         nextMoves: [],
         treasures: 0,
@@ -162,6 +170,7 @@ test("advance two adventurers who cross paths but one can move", () => {
         name: "CBA",
         x: 2,
         y: 0,
+        justMoved: false,
         orientation: "O",
         nextMoves: [],
         treasures: 0,
@@ -181,15 +190,17 @@ test("advance an adventurer who spawns on a treasure", () => {
   const newMap = finishSimulation(map);
   expect(newMap).toEqual<TreasureMap>({
     ...map,
-    squares: [[{ type: "treasure", amount: 0 }]],
+    squares: [[{ type: "treasure", amount: 1 }]],
     adventurers: [
       {
         name: "Pluto",
         x: 0,
         y: 0,
+        justMoved: false,
         orientation: "E",
         nextMoves: [],
-        treasures: 1,
+        // because the adventurer doesn't move
+        treasures: 0,
       },
     ],
   });
@@ -212,6 +223,7 @@ test("advance an adventurer who spawns next to a treasure", () => {
         name: "Pluto",
         x: 1,
         y: 0,
+        justMoved: true,
         orientation: "E",
         nextMoves: [],
         treasures: 1,
@@ -232,17 +244,50 @@ test("collect two treasures", () => {
   const newMap = finishSimulation(map);
   expect(newMap).toEqual<TreasureMap>({
     ...map,
-    squares: [
-      [{ type: "empty" }, { type: "treasure", amount: 0 }, { type: "treasure", amount: 0 }],
-    ],
+    squares: [[{ type: "empty" }, { type: "empty" }, { type: "empty" }]],
     adventurers: [
       {
         name: "Haley",
         x: 2,
         y: 0,
+        justMoved: true,
         orientation: "E",
         nextMoves: [],
         treasures: 2,
+      },
+    ],
+  });
+});
+
+const SUBJECT = `
+C - 3 - 4
+M - 1 - 0
+M - 2 - 1
+T - 0 - 3 - 2
+T - 1 - 3 - 3
+A - Lara - 1 - 1 - S - AADADAGGA
+`;
+
+test("collect treasures as in the subject's example", () => {
+  const map = parseMap(SUBJECT);
+  const newMap = finishSimulation(map);
+  expect(newMap).toEqual<TreasureMap>({
+    ...map,
+    squares: [
+      [{ type: "empty" }, { type: "mountain" }, { type: "empty" }],
+      [{ type: "empty" }, { type: "empty" }, { type: "mountain" }],
+      [{ type: "empty" }, { type: "empty" }, { type: "empty" }],
+      [{ type: "empty" }, { type: "treasure", amount: 2 }, { type: "empty" }],
+    ],
+    adventurers: [
+      {
+        name: "Lara",
+        x: 0,
+        y: 3,
+        justMoved: true,
+        orientation: "S",
+        nextMoves: [],
+        treasures: 3,
       },
     ],
   });
