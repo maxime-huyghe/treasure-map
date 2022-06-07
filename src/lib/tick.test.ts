@@ -259,7 +259,7 @@ test("collect two treasures", () => {
   });
 });
 
-const SUBJECT = `
+export const EXAMPLE = `
 C - 3 - 4
 M - 1 - 0
 M - 2 - 1
@@ -269,7 +269,7 @@ A - Lara - 1 - 1 - S - AADADAGGA
 `;
 
 test("collect treasures as in the subject's example", () => {
-  const map = parseMap(SUBJECT);
+  const map = parseMap(EXAMPLE);
   const newMap = finishSimulation(map);
   expect(newMap).toEqual<TreasureMap>({
     ...map,
