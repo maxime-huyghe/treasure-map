@@ -40,6 +40,7 @@ function tickIndividualAdventurer(map: TreasureMap, adventurer: Adventurer): Adv
         y: newY,
         orientation: adventurer.orientation,
         nextMoves: restOfNextMoves,
+        treasures: adventurer.treasures,
       };
     case "G":
       return {
@@ -48,6 +49,7 @@ function tickIndividualAdventurer(map: TreasureMap, adventurer: Adventurer): Adv
         y: adventurer.y,
         orientation: rotateAdventurerCounterClockwise(adventurer.orientation),
         nextMoves: restOfNextMoves,
+        treasures: adventurer.treasures,
       };
     case "D":
       return {
@@ -56,6 +58,7 @@ function tickIndividualAdventurer(map: TreasureMap, adventurer: Adventurer): Adv
         y: adventurer.y,
         orientation: rotateAdventurerClockwise(adventurer.orientation),
         nextMoves: restOfNextMoves,
+        treasures: adventurer.treasures,
       };
   }
 }
@@ -133,7 +136,7 @@ function rotateAdventurerClockwise(orientation: Orientation): Orientation {
  * @param adventurers the adventurers
  * @returns whether the adventurers can still move
  */
-export function adventurersCanStillMove(adventurers: Adventurer[]): boolean {
+export function adventurersCanStillMove(adventurers: ReadonlyArray<Adventurer>): boolean {
   return adventurers.some((a) => a.nextMoves.length > 0);
 }
 

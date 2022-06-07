@@ -6,7 +6,7 @@ C - 2 - 2
 A - Mercury - 0 - 0 - S - AA
 `;
 
-test("advance one non-blocked adventurer one turn", () => {
+test("advance an non-blocked adventurer one turn", () => {
   // This type assertion is ok because this is a test, not real code
   // interfacing with the real world.
   const map = parseMap(MOVE_SOUTH);
@@ -20,6 +20,7 @@ test("advance one non-blocked adventurer one turn", () => {
         y: 1,
         orientation: "S",
         nextMoves: ["A"],
+        treasures: 0,
       },
     ],
   });
@@ -30,7 +31,7 @@ C - 2 - 2
 A - Venus - 0 - 0 - S - AGAGAGA
 `;
 
-test("advance one adventurer until their movements are exhausted", () => {
+test("advance an adventurer until their movements are exhausted", () => {
   const map = parseMap(COME_BACK_HOME);
   const newMap = finishSimulation(map);
   expect(newMap).toEqual<TreasureMap>({
@@ -42,6 +43,7 @@ test("advance one adventurer until their movements are exhausted", () => {
         y: 0,
         orientation: "O",
         nextMoves: [],
+        treasures: 0,
       },
     ],
   });
@@ -53,7 +55,7 @@ M - 0 - 0
 A - Earth - 0 - 2 - N - AAADA
 `;
 
-test("advance one adventurer who gets blocked by a mountain", () => {
+test("advance an adventurer who gets blocked by a mountain", () => {
   const map = parseMap(NOT_A_CLIMBER);
   const newMap = finishSimulation(map);
   expect(newMap).toEqual<TreasureMap>({
@@ -65,6 +67,7 @@ test("advance one adventurer who gets blocked by a mountain", () => {
         y: 1,
         orientation: "E",
         nextMoves: [],
+        treasures: 0,
       },
     ],
   });
@@ -89,6 +92,7 @@ test("advance two adventurers who don't cross paths", () => {
         y: 2,
         orientation: "S",
         nextMoves: [],
+        treasures: 0,
       },
       {
         name: "Deimos",
@@ -96,6 +100,7 @@ test("advance two adventurers who don't cross paths", () => {
         y: 0,
         orientation: "N",
         nextMoves: [],
+        treasures: 0,
       },
     ],
   });
@@ -119,6 +124,7 @@ test("advance two adventurers who cross paths", () => {
         y: 0,
         orientation: "E",
         nextMoves: [],
+        treasures: 0,
       },
       {
         name: "CBA",
@@ -126,6 +132,7 @@ test("advance two adventurers who cross paths", () => {
         y: 0,
         orientation: "O",
         nextMoves: [],
+        treasures: 0,
       },
     ],
   });
@@ -149,6 +156,7 @@ test("advance two adventurers who cross paths but one can move", () => {
         y: 0,
         orientation: "E",
         nextMoves: [],
+        treasures: 0,
       },
       {
         name: "CBA",
@@ -156,6 +164,83 @@ test("advance two adventurers who cross paths but one can move", () => {
         y: 0,
         orientation: "O",
         nextMoves: [],
+        treasures: 0,
+      },
+    ],
+  });
+});
+
+const LUCKY_SPAWN = `
+C - 1 - 1
+T - 0 - 0 - 1
+A - Pluto - 0 - 0 - E - A
+`;
+
+test("advance an adventurer who spawns on a treasure", () => {
+  const map = parseMap(LUCKY_SPAWN);
+  const newMap = finishSimulation(map);
+  expect(newMap).toEqual<TreasureMap>({
+    ...map,
+    squares: [[{ treasure: 0 }]],
+    adventurers: [
+      {
+        name: "Pluto",
+        x: 0,
+        y: 0,
+        orientation: "E",
+        nextMoves: [],
+        treasures: 1,
+      },
+    ],
+  });
+});
+
+const A_BIT_LESS_LUCKY = `
+C - 2 - 1
+T - 1 - 0 - 2
+A - Pluto - 0 - 0 - E - A
+`;
+
+test("advance an adventurer who spawns next to a treasure", () => {
+  const map = parseMap(A_BIT_LESS_LUCKY);
+  const newMap = finishSimulation(map);
+  expect(newMap).toEqual<TreasureMap>({
+    ...map,
+    squares: [[{ empty: true }, { treasure: 1 }]],
+    adventurers: [
+      {
+        name: "Pluto",
+        x: 1,
+        y: 0,
+        orientation: "E",
+        nextMoves: [],
+        treasures: 1,
+      },
+    ],
+  });
+});
+
+const TWO_TREASURES = `
+C - 3 - 1
+T - 1 - 0 - 1
+T - 2 - 0 - 1
+A - Haley - 0 - 0 - E - AA
+`;
+
+test("collect two treasures", () => {
+  const map = parseMap(A_BIT_LESS_LUCKY);
+  const newMap = finishSimulation(map);
+  expect(newMap).toEqual<TreasureMap>({
+    ...map,
+    squares: [[{ empty: true }, { treasure: 0 }, { treasure: 0 }]],
+    adventurers: [
+      {
+        name: "Pluto",
+        x: 1,
+        y: 0,
+        orientation: "E",
+        nextMoves: [],
+        treasures: 2,
       },
     ],
   });

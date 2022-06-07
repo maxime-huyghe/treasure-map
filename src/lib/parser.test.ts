@@ -78,6 +78,7 @@ test("parses a map with some adventurers", () => {
         y: 0,
         orientation: "S",
         nextMoves: ["A", "D", "A", "D", "A", "D", "A", "D", "A", "D"],
+        treasures: 0,
       },
       {
         name: "Bravo",
@@ -85,6 +86,7 @@ test("parses a map with some adventurers", () => {
         y: 1,
         orientation: "N",
         nextMoves: ["G", "A", "G", "A", "G", "A", "G", "A", "G", "A"],
+        treasures: 0,
       },
     ],
   });
@@ -239,6 +241,7 @@ test("parses a complex map with every element type", () => {
         y: 0,
         orientation: "S",
         nextMoves: ["A", "D", "A", "D", "A", "D", "A", "D", "A", "D"],
+        treasures: 0,
       },
       {
         name: "Bravo",
@@ -246,6 +249,7 @@ test("parses a complex map with every element type", () => {
         y: 1,
         orientation: "N",
         nextMoves: ["G", "A", "G", "A", "G", "A", "G", "A", "G", "A"],
+        treasures: 0,
       },
       {
         name: "Charlie",
@@ -253,6 +257,7 @@ test("parses a complex map with every element type", () => {
         orientation: "E",
         x: 2,
         y: 4,
+        treasures: 0,
       },
     ],
   });
