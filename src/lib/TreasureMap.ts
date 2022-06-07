@@ -113,3 +113,31 @@ export function parseMap(input: string): TreasureMap {
     adventurers,
   };
 }
+
+/**
+ * Writes the string representation of a finished simulation to a string.
+ * @param map the map to write
+ * @returns its string representation
+ */
+export function writeMap(map: TreasureMap): string {
+  const metadata = `C - ${map.width} - ${map.height}`;
+  const mountainsAndTreasures = map.squares
+    .map((row, y) =>
+      row.map((square, x) => {
+        if (square.type === "mountain") {
+          return `M - ${x} - ${y}`;
+        }
+        if (square.type === "treasure") {
+          return `T - ${x} - ${y} - ${square.amount}`;
+        }
+        return "";
+      }),
+    )
+    .flat()
+    .filter((line) => line.length > 0);
+  const adventurers = map.adventurers.map(
+    (adventurer) =>
+      `A - ${adventurer.name} - ${adventurer.x} - ${adventurer.y} - ${adventurer.orientation} - ${adventurer.treasures}`,
+  );
+  return [metadata, ...mountainsAndTreasures, ...adventurers].join("\n");
+}
