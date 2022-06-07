@@ -1,5 +1,21 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "$lib": [
+        "src/lib"
+      ],
+      "$lib/*": [
+        "src/lib/*"
+      ],
+      "$components": [
+        "src/components"
+      ],
+      "$components/*": [
+        "src/components/*"
+      ],
+    },
+    "importsNotUsedAsValues": "error",
     "target": "es5",
     "lib": [
       "dom",
