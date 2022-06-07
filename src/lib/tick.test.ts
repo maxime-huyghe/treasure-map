@@ -1,5 +1,6 @@
 import { parseMap, TreasureMap } from "./TreasureMap";
 import { finishSimulation, tickSimulation } from "./Game";
+import { EXAMPLE_MAP } from "./consts";
 
 const MOVE_SOUTH = `
 C - 2 - 2
@@ -259,17 +260,8 @@ test("collect two treasures", () => {
   });
 });
 
-export const EXAMPLE = `
-C - 3 - 4
-M - 1 - 0
-M - 2 - 1
-T - 0 - 3 - 2
-T - 1 - 3 - 3
-A - Lara - 1 - 1 - S - AADADAGGA
-`;
-
 test("collect treasures as in the subject's example", () => {
-  const map = parseMap(EXAMPLE);
+  const map = parseMap(EXAMPLE_MAP);
   const newMap = finishSimulation(map);
   expect(newMap).toEqual<TreasureMap>({
     ...map,

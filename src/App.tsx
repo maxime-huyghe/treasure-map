@@ -1,3 +1,4 @@
+import TreasureMap from './components/TreasureMap';
 import './App.css';
 
 function App() {
@@ -6,6 +7,7 @@ function App() {
       <header className="App-header">
         Treasure Map
       </header>
+      <TreasureMap />
     </div>
   );
 }
