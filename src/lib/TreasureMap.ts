@@ -6,12 +6,13 @@ export type TreasureMap = Readonly<{
 }>;
 
 export type Square = Readonly<
-  | { empty: true }
+  | { type: "empty" }
   | {
-      mountain: true;
+      type: "mountain";
     }
   | {
-      treasure: number;
+      type: "treasure";
+      amount: number;
     }
 >;
 
@@ -59,7 +60,7 @@ export function parseMap(input: string): TreasureMap {
 
   const squares: Square[][] = Array(height)
     .fill(null)
-    .map(() => Array(width).fill({ empty: true }));
+    .map(() => Array(width).fill({ type: "empty" }));
   const adventurers: Adventurer[] = [];
 
   for (const line of rest) {
@@ -71,14 +72,17 @@ export function parseMap(input: string): TreasureMap {
     const mountainMatches = line.match(MOUNTAIN_LINE_REGEX);
     if (mountainMatches !== null) {
       const [, x, y] = mountainMatches;
-      squares[parseInt(y, 10)][parseInt(x, 10)] = { mountain: true };
+      squares[parseInt(y, 10)][parseInt(x, 10)] = { type: "mountain" };
       continue;
     }
 
     const treasureMatches = line.match(TREASURE_LINE_REGEX);
     if (treasureMatches !== null) {
       const [, x, y, amount] = treasureMatches;
-      squares[parseInt(y, 10)][parseInt(x, 10)] = { treasure: parseInt(amount, 10) };
+      squares[parseInt(y, 10)][parseInt(x, 10)] = {
+        type: "treasure",
+        amount: parseInt(amount, 10),
+      };
       continue;
     }
 

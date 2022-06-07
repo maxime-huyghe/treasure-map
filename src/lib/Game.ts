@@ -1,4 +1,4 @@
-import type { Adventurer, Orientation, TreasureMap } from "./TreasureMap";
+import type { Adventurer, Orientation, Square, TreasureMap } from "./TreasureMap";
 
 /**
  * Ticks the simulation one turn forward.
@@ -15,8 +15,31 @@ export function tickSimulation(map: TreasureMap): TreasureMap {
       map.adventurers[i],
     );
   }
+
+  // Collect treasures
+  const newSquares: Square[][] = map.squares.map((row, y) =>
+    row.map((square, x) => {
+      if (!(square.type === "treasure")) {
+        return square;
+      }
+      // Find an adventurer in the same position as the treasure.
+      for (const adv in newAdventurers) {
+        if (newAdventurers[adv].x === x && newAdventurers[adv].y === y) {
+          newAdventurers[adv] = {
+            ...newAdventurers[adv],
+            treasures: newAdventurers[adv].treasures + 1,
+          };
+          // We can return directly because no two adventurers can be on the same square.
+          return { ...square, amount: square.amount - 1 };
+        }
+      }
+      return square;
+    }),
+  );
+
   return {
     ...map,
+    squares: newSquares,
     adventurers: newAdventurers,
   };
 }
@@ -92,7 +115,7 @@ function moveAdventurerForward(
     return { newX: x, newY: y };
   }
   const newSquare = map.squares[newY][newX];
-  const aMountainIsThere = newSquare.hasOwnProperty("mountain");
+  const aMountainIsThere = newSquare.type === "mountain";
   if (aMountainIsThere) {
     return { newX: x, newY: y };
   }

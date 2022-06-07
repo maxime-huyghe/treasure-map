@@ -6,7 +6,7 @@ C - 2 - 2
 A - Mercury - 0 - 0 - S - AA
 `;
 
-test("advance an non-blocked adventurer one turn", () => {
+test("advance a non-blocked adventurer one turn", () => {
   // This type assertion is ok because this is a test, not real code
   // interfacing with the real world.
   const map = parseMap(MOVE_SOUTH);
@@ -181,7 +181,7 @@ test("advance an adventurer who spawns on a treasure", () => {
   const newMap = finishSimulation(map);
   expect(newMap).toEqual<TreasureMap>({
     ...map,
-    squares: [[{ treasure: 0 }]],
+    squares: [[{ type: "treasure", amount: 0 }]],
     adventurers: [
       {
         name: "Pluto",
@@ -206,7 +206,7 @@ test("advance an adventurer who spawns next to a treasure", () => {
   const newMap = finishSimulation(map);
   expect(newMap).toEqual<TreasureMap>({
     ...map,
-    squares: [[{ empty: true }, { treasure: 1 }]],
+    squares: [[{ type: "empty" }, { type: "treasure", amount: 1 }]],
     adventurers: [
       {
         name: "Pluto",
@@ -228,15 +228,17 @@ A - Haley - 0 - 0 - E - AA
 `;
 
 test("collect two treasures", () => {
-  const map = parseMap(A_BIT_LESS_LUCKY);
+  const map = parseMap(TWO_TREASURES);
   const newMap = finishSimulation(map);
   expect(newMap).toEqual<TreasureMap>({
     ...map,
-    squares: [[{ empty: true }, { treasure: 0 }, { treasure: 0 }]],
+    squares: [
+      [{ type: "empty" }, { type: "treasure", amount: 0 }, { type: "treasure", amount: 0 }],
+    ],
     adventurers: [
       {
-        name: "Pluto",
-        x: 1,
+        name: "Haley",
+        x: 2,
         y: 0,
         orientation: "E",
         nextMoves: [],
