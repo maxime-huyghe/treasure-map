@@ -1,7 +1,8 @@
 import type { Adventurer, TreasureMap } from "../lib/TreasureMap";
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { adventurersCanStillMove, tickSimulation } from "../lib/Game";
 import FilePicker from "./FilePicker";
+import Button from "./Button";
 
 const Map = () => {
   const [treasureMaps, setTreasureMaps] = useState([] as TreasureMap[]);
@@ -28,24 +29,26 @@ const Map = () => {
   }, []);
 
   return (
-    <>
+    <div className="px-4">
       <FilePicker onUpload={onUpload} currentMap={lastMap} />
       {
         lastMap && (<>
           <Grid treasureMap={lastMap} />
           <div>
-            <button onClick={onPrev} disabled={treasureMaps.length === 1}>Previous</button>
-            <button onClick={onNext} disabled={!adventurersCanStillMove(lastMap.adventurers)}>Next</button>
-            <button onClick={onFinish} disabled={!adventurersCanStillMove(lastMap.adventurers)}>Run to the end</button>
+            <Button onClick={onPrev} disabled={treasureMaps.length === 1}>Previous</Button>
+            <Button onClick={onNext} disabled={!adventurersCanStillMove(lastMap.adventurers)}>Next</Button>
+            <Button onClick={onFinish} disabled={!adventurersCanStillMove(lastMap.adventurers)}>Run to the end</Button>
           </div>
         </>)}
-    </>
+    </div>
   );
 };
 
 const Grid = ({ treasureMap }: { treasureMap: TreasureMap; }) => {
-  return <div className="grid" style={{ gridTemplateColumns: `repeat(${ treasureMap.width }, 100px)` }}>
-    {treasureMap.squares.map((row, y) =>
+  return <div className={`grid gap-3 w-fit p-4`} style={{
+    gridTemplateColumns: `repeat(${ treasureMap.width }, minmax(0, 1fr))`,
+  }}>
+    {treasureMap.squares.map((row, y) => (
       row.map((square, x) => {
         const key = `${ x }${ y }`;
         const adventurerOnThisSquare = treasureMap.adventurers.find(a => a.x === x && a.y === y);
@@ -62,24 +65,28 @@ const Grid = ({ treasureMap }: { treasureMap: TreasureMap; }) => {
         }
         return null; // won't ever be reached, is there to shut up the warning
       })
-    )}
+    ))}
   </div>;
 };
 
 const AdventurerSquare = ({ adventurer }: { adventurer: Adventurer; }) => {
-  return <span>A({adventurer.name})</span>;
+  return <Square>A({adventurer.name})</Square>;
 };
 
 const EmptySquare = () => {
-  return <span>.</span>;
+  return <Square>.</Square>;
 };
 
 const TreasureSquare = ({ amount }: { amount: number; }) => {
-  return <span>T({amount})</span>;
+  return <Square>T({amount})</Square>;
 };
 
 const MountainSquare = () => {
-  return <span>M</span>;
+  return <Square>M</Square>;
+};
+
+const Square = ({ children }: { children: React.ReactNode; }) => {
+  return <span>{children}</span>;
 };
 
 export default Map;

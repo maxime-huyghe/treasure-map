@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useFilePicker } from "use-file-picker";
 import { parseMap, TreasureMap, writeMap } from "../lib/TreasureMap";
+import Button from "./Button";
 
 const FilePicker = ({ onUpload, currentMap }: { onUpload: (tm: TreasureMap) => void; currentMap?: TreasureMap; }) => {
   const [filename, setFilename] = useState(null as string | null);
@@ -30,22 +31,30 @@ const FilePicker = ({ onUpload, currentMap }: { onUpload: (tm: TreasureMap) => v
   });
 
   return (
-    <div>
-      <button onClick={openFilePicker}>Upload a new map</button>
+    <>
       {
-        filename && (<>
-          Open file: {filename}
-        </>)
+        filename && (
+          <p className="pb-2">
+            Open file: {filename}
+          </p>
+        )
       }
-      {error}
-      <br />
-      {
-        fileToDownload &&
-        <a href={URL.createObjectURL(fileToDownload)} download={filename}>
-          Download current map's result
-        </a>
-      }
-    </div >
+      {error && (
+        <p className="pb-2">
+          error
+        </p>
+      )}
+      <div>
+        <Button onClick={openFilePicker}>Upload a new map</Button>
+        {
+          fileToDownload && (
+            <Button.AsLink href={URL.createObjectURL(fileToDownload)} download={filename}>
+              Download current map's result
+            </Button.AsLink>
+          )
+        }
+      </div>
+    </>
   );
 };
 
