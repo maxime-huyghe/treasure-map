@@ -7,13 +7,17 @@ import Button from "./Button";
 const Map = () => {
   const [treasureMaps, setTreasureMaps] = useState([] as TreasureMap[]);
   const lastMap = treasureMaps.at(-1);
+
+  const onReset = () => {
+    setTreasureMaps(treasureMaps.slice(0, 1));
+  };
+  const onPrev = () => {
+    setTreasureMaps(treasureMaps.slice(0, -1));
+  };
   const onNext = () => {
     if (lastMap) {
       setTreasureMaps([...treasureMaps, tickSimulation(lastMap)]);
     }
-  };
-  const onPrev = () => {
-    setTreasureMaps(treasureMaps.slice(0, -1));
   };
   const onFinish = () => {
     setTreasureMaps((treasureMaps) => {
@@ -35,6 +39,7 @@ const Map = () => {
         lastMap && (<>
           <Grid treasureMap={lastMap} />
           <div>
+            <Button onClick={onReset} disabled={treasureMaps.length === 1}>Reset</Button>
             <Button onClick={onPrev} disabled={treasureMaps.length === 1}>Previous</Button>
             <Button onClick={onNext} disabled={!adventurersCanStillMove(lastMap.adventurers)}>Next</Button>
             <Button onClick={onFinish} disabled={!adventurersCanStillMove(lastMap.adventurers)}>Run to the end</Button>
