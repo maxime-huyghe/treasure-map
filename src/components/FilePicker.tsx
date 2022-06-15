@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useFilePicker } from "use-file-picker";
+import { EXAMPLE_MAP } from "../lib/consts";
 import { parseMap, TreasureMap, writeMap } from "../lib/TreasureMap";
 import Button from "./Button";
 
@@ -26,6 +27,13 @@ const FilePicker = ({ onUpload, currentMap }: { onUpload: (tm: TreasureMap) => v
     }
   }, [filesContent, onUpload]);
 
+  const openDefaultMap = () => {
+    const map = parseMap(EXAMPLE_MAP);
+    setFilename("example.txt");
+    setError(null);
+    onUpload(map);
+  };
+
   const fileToDownload = currentMap && new Blob([writeMap(currentMap)], {
     type: "text/plain"
   });
@@ -46,6 +54,7 @@ const FilePicker = ({ onUpload, currentMap }: { onUpload: (tm: TreasureMap) => v
       )}
       <div>
         <Button onClick={openFilePicker}>Upload a new map</Button>
+        <Button onClick={openDefaultMap}>Use the default map</Button>
         {
           fileToDownload && (
             <Button.AsLink href={URL.createObjectURL(fileToDownload)} download={filename}>
